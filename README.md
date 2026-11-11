@@ -290,7 +290,7 @@ ports, TLS, MTA-STS), the crt.sh cap, the database schema, and the completeness 
 - It does not replace a penetration test or a code/architecture review; no finding does not prove there
   is no vulnerability.
 - A report is a snapshot: configurations change, so run it regularly (`diff` shows the evolution).
-- Linux untested; Windows only through WSL2.
+- Windows only through WSL2.
 
 ## Acceptable use
 
