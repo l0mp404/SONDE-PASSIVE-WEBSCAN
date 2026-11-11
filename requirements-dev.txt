@@ -1,0 +1,5 @@
+# Test dependencies (on top of requirements.lock):
+#   .venv/bin/pip install --require-hashes -r requirements-dev.lock
+# Regenerate the lock:
+#   uv pip compile requirements.txt requirements-dev.txt --universal --python-version 3.12 --generate-hashes -o requirements-dev.lock
+pytest==9.2.0

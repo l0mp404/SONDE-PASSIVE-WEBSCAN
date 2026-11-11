@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Sonde {{ version }}">
+<title>{{ _("Security audit — {domain}", domain=domain) }}</title>
+{# Les polices sont celles installées sur la machine : aucune ressource externe n'est chargée. #}
+<style>
+{% include '_style.css.j2' %}
+</style>
+</head>
+<body class="{{ 'light' if light else 'dark' }}">
+
+<header>
+  <div class="brand">{{ _("Sonde · Security audit") }}</div>
+  <div class="hero">
+    <div class="hero-meta">
+      <p class="domain">{{ scan.domain }}</p>
+      <p class="meta-line">
+        {{ _("Report of {date} · scan #{id}", date=scan.started_at | fmt_datetime, id=scan.id) }}
+        · <span class="pill">{{ _("Passive mode") }}</span>
+      </p>
+      <div class="counters">
+        <div class="counter crit"><b>{{ counts.crit }}</b><span>{{ _("critical") }}</span></div>
+        <div class="counter warn"><b>{{ counts.warn }}</b><span>{{ _("warning") }}</span></div>
+        <div class="counter ok"><b>{{ counts.ok }}</b><span>{{ _("passed") }}</span></div>
+        <div class="counter"><b>{{ counts.info }}</b><span>{{ _("info") }}</span></div>
+      </div>
+    </div>
+    <div class="grade-box">
+      <div class="grade grade-{{ scores.overall.grade }}">{{ scores.overall.grade }}</div>
+      <div class="score">{{ scores.overall.value }} / 100</div>
+      <div class="subscores">
+        {% if scores.web %}<span>Web <b class="grade-{{ scores.web.grade }}">{{ scores.web.grade }}</b> {{ scores.web.value }}</span>{% endif %}
+        {% if scores.email %}<span>Email <b class="grade-{{ scores.email.grade }}">{{ scores.email.grade }}</b> {{ scores.email.value }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if failed_checks %}
+<div class="box notice">
+  <h3>{{ _("Partial results") }}</h3>
+  <p style="margin:0">{{ _("{n} check(s) could not be completed (server unreachable, timeout, error or non-public address) and are not assessed: the grade is indicative.", n=failed_checks | length) }}</p>
+  <p class="mono muted" style="margin:6px 0 0;font-size:12px">{{ failed_checks | join(', ') }}</p>
+</div>
+{% endif %}
+
+{% for section in sections %}
+<section class="cat" id="{{ section.category }}">
+  <div class="cat-head">
+    <h2>{{ section.title }}</h2>
+    {% if section.score %}
+    <div class="cat-score"><span class="g grade-{{ section.score.grade }}">{{ section.score.grade }}</span>{{ section.score.value }} / 100</div>
+    {% else %}
+    <div class="cat-score muted">{{ _("Not graded") }}</div>
+    {% endif %}
+  </div>
+  {% for f in section.findings %}
+  {% set sev = f.severity.value %}
+  <article class="finding {{ sev }}{{ ' compact' if sev == 'ok' }}">
+    <div class="f-head">
+      <span class="badge {{ sev }}">{{ severity_label[sev] }}</span>
+      <h3>{{ f.title }}</h3>
+    </div>
+    <p class="f-detail">{{ f.detail }}</p>
+    {% if sev != 'ok' %}
+      {% if f.fix %}
+      <div class="label">{{ _("Fix") }}</div>
+      <pre class="fix">{{ f.fix }}</pre>
+      {% endif %}
+      {# Les infos restent synthétiques : le détail technique est réservé aux problèmes. #}
+      {% if f.evidence and (sev != 'info' or f.check_id == 'web.public_address') %}
+      <div class="label">{{ _("Technical evidence") }}</div>
+      <pre class="evidence">{{ f.evidence }}</pre>
+      {% endif %}
+      {% if f.references and sev != 'info' %}
+      <div class="label">{{ _("Learn more") }}</div>
+      <ul class="refs">
+        {% for ref in f.references %}
+        {% if ref.startswith('https://') or ref.startswith('http://') %}<li><a href="{{ ref }}">{{ ref }}</a></li>{% else %}<li>{{ ref }}</li>{% endif %}
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endif %}
+  </article>
+  {% else %}
+  <p class="empty">{{ _("No check in this category.") }}</p>
+  {% endfor %}
+</section>
+{% endfor %}
+
+<footer>
+  <h3>{{ _("Methodology") }}</h3>
+  <p>
+    {{ _("This audit is passive: it only uses public information (HTTP headers, TLS certificate, DNS records, email configuration). No intrusion attempt was made. Each finding comes with a fix to apply.") }}
+  </p>
+  <h3>{{ _("How the grade is computed") }}</h3>
+  <p>
+    {{ _("Each category (web, email) starts at 100 points: {crit} points are removed per critical finding, {warn} per warning, 0 for information. The penalty of a single check is capped at {cap} points so that one issue cannot sink the whole grade. The overall grade is the average of the audited categories.", crit=penalty.crit, warn=penalty.warn, cap=cap) }}
+  </p>
+  <table class="scale"><tr>
+    {% for threshold, letter in grades %}<td><b>{{ letter }}</b> ≥ {{ threshold }}</td>{% endfor %}
+  </tr></table>
+  <h3>{{ _("Limitations") }}</h3>
+  <ul>
+    <li>{{ _("This report is a snapshot as of {date}; the configuration may change afterwards.", date=scan.started_at | fmt_datetime) }}</li>
+    <li>{{ _("Only the home page is analyzed for headers, cookies and content: areas behind a login are not covered.") }}</li>
+    <li>{{ _("DKIM is looked up among the most common selector names; a custom selector may not be detected.") }}</li>
+    <li>{{ _("This audit does not replace a full penetration test, nor a code or architecture review.") }}</li>
+    <li>{{ _("The absence of findings does not guarantee the absence of vulnerabilities.") }}</li>
+  </ul>
+  <p class="mono" style="margin-top:14px;font-size:11px">{{ _("Generated by Sonde {version}", version=version) }}</p>
+</footer>
+
+</body>
+</html>

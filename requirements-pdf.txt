@@ -1,0 +1,5 @@
+# Optional: PDF export of reports (also needs Pango: "brew install pango" on macOS).
+# Install with hashes:  .venv/bin/pip install --require-hashes -r requirements-pdf.lock
+# Regenerate the lock:
+#   uv pip compile requirements.txt requirements-pdf.txt --universal --python-version 3.12 --generate-hashes -o requirements-pdf.lock
+weasyprint==70.0

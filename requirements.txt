@@ -1,0 +1,14 @@
+# Direct dependencies, pinned to exact versions.
+# The launcher installs from requirements.lock (all transitive deps, with hashes):
+#   pip install --require-hashes -r requirements.lock
+# Regenerate the lock after changing this file:
+#   uv pip compile requirements.txt --universal --python-version 3.12 --generate-hashes -o requirements.lock
+typer==0.29.1
+rich==15.0.0
+httpx==0.28.1
+httpcore==1.0.9
+dnspython==2.9.2
+cryptography==50.0.2
+idna==3.20
+certifi==2026.10.23
+jinja2==3.1.6
