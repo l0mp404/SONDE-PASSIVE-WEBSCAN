@@ -31,7 +31,7 @@ Messages, findings, fixes and reports are **in English by default**; add `--lang
 | System | Status |
 |---|---|
 | **macOS** (Apple Silicon / Intel) | ✅ developed and tested |
-| **Linux** (Debian, Ubuntu, Fedora, Arch…) | ✅ should work (pure Python), untested |
+| **Linux** (Debian, Ubuntu, Kali, Arch…) | ✅ work and tested |
 | **Windows** | ⚠️ not supported natively → use **WSL2** (Ubuntu) |
 
 Requirements: **Python 3.12 or newer** and Internet access. Nothing else to install by hand.
