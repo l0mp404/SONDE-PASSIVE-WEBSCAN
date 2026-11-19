@@ -778,6 +778,34 @@ FR: dict[str, str] = {
         "simple cookie de préférence, l'impact est faible ; si c'est une session, c'est "
         "important."
     ),
+    "“{name}” has a random-looking value of {length} characters, probably a session "
+    "identifier or token ({explain}). If so, whoever steals it takes over the session.": (
+        "« {name} » a une valeur d'apparence aléatoire de {length} caractères, sans doute un "
+        "identifiant de session ou un jeton ({explain}). Si c'est le cas, qui le vole prend "
+        "la session."
+    ),
+    "{prefix} prefix without Secure": "Préfixe {prefix} sans Secure",
+    "the browser rejects this cookie outright": "le navigateur refuse tout simplement ce cookie",
+    "“{name}” looks like a session or authentication cookie ({explain}). Whoever steals it "
+    "takes over the user's session: fix it as a priority.": (
+        "« {name} » ressemble à un cookie de session ou d'authentification ({explain}). "
+        "Qui le vole prend la session de l'utilisateur : à corriger en priorité."
+    ),
+    "“{name}” looks like an anti-CSRF token ({explain}). It is normal for the page's "
+    "JavaScript to read it, so HttpOnly is not required.": (
+        "« {name} » ressemble à un jeton anti-CSRF ({explain}). Il est normal que le "
+        "JavaScript de la page le lise, HttpOnly n'est donc pas exigé."
+    ),
+    "“{name}” looks like an analytics, advertising or CDN cookie ({explain}). It holds no "
+    "session: low impact, often set by a third-party tool.": (
+        "« {name} » ressemble à un cookie de mesure d'audience, de pub ou de CDN ({explain}). "
+        "Il ne contient pas de session : impact faible, souvent posé par un outil tiers."
+    ),
+    "“{name}” looks like a preference cookie (language, consent, theme…) ({explain}). It "
+    "holds no secret: low impact.": (
+        "« {name} » ressemble à un cookie de préférence (langue, consentement, thème…) "
+        "({explain}). Il ne contient pas de secret : impact faible."
+    ),
     # ------------------------------------------------------------------ web.leaks
     "header {name}": "en-tête {name}",
     "“{hint}” found in the page": "présence de « {hint} » dans la page",
